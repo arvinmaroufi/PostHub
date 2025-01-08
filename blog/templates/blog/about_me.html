@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About Me{% endblock %}
+
+{% block content %}
+    <!-- About Me Area Start -->
+    <section class="about-me-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-8 offset-xl-2">
+                    <div class="about-me-content">
+                        <div class="about-me-image">
+                            <img src="{% static 'images/arvin.jpg' %}" alt="About Me">
+                        </div>
+                        <div class="about-me-text">
+                            <h2>About Me</h2>
+                            <p>Hi, I'm Arvin Maroufi. I am a web developer working in the backend sector. I am fully specialized in Python programming language and Django framework.</p>
+                            <p>I love to learn new things and share my knowledge with others and help others.</p>
+                            <div class="social-links">
+                                <h3>Follow Me:</h3>
+                                <ul>
+                                    <li><a href="https://github.com/arvinmaroufi"><i class="bi bi-github"></i></a></li>
+                                    <li><a href="https://t.me/arvinmaroufi_ir"><i class="bi bi-telegram"></i></a></li>
+                                    <li><a href="https://instagram.com/arvinmaroufi.ir"><i class="bi bi-instagram"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- About Me Area End -->
+{% endblock %}

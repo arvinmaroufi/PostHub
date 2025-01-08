@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}PostHub{% endblock %}
+
+{% block content %}
+    <!-- Main Area Start -->
+    <main style="margin-top: 140px;margin-bottom: 138px">
+        <section class="register-area">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-md-8">
+                        <div class="register-form">
+                            <h2>Register</h2>
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="email">First Name</label>
+                                    <input type="text" name="first_name" class="form-control" placeholder="Enter First Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control" placeholder="Enter Last Name">
+                                </div>
+                                {% for error_username in form.username.errors %}
+                                    {% if error_username %}
+                                        <p class="alert alert-danger m-1">{{ error_username }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="form-group">
+                                    <label for="name">Username</label>
+                                    <input type="text" name="username" class="form-control" placeholder="Enter Username">
+                                </div>
+                                {% for error_email in form.email.errors %}
+                                    {% if error_email %}
+                                        <p class="alert alert-danger m-1">{{ error_email }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" name="email" class="form-control" placeholder="Enter Email">
+                                </div>
+                                {% for error_password in form.password.errors %}
+                                    {% if error_password %}
+                                        <p class="alert alert-danger m-1">{{ error_password }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" name="password" class="form-control" placeholder="Enter Password">
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Main Area End -->
+{% endblock %}

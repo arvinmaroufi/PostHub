@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}PostHub{% endblock %}
+
+{% block content %}
+    <!-- Hero Area Start -->
+    <section class="hero-area feature-post">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="feature-post-slider owl-carousel">
+                        {% for article in popular_article %}
+                            <div class="single-feature-post">
+                                {% if article.image %}
+                                    <img src="{{ article.image.url }}" alt="{{ article.title|truncatewords:4 }}">
+                                {% else %}
+                                    <img src="{% static 'images/image_not_available.jpg' %}" alt="{{ article.title|truncatewords:4 }}">
+                                {% endif %}
+                                <div class="feature-text-wrapper">
+                                    <div class="feature-text">
+                                        <h2>{{ article.title|truncatewords:4 }}</h2>
+                                        <p>{{ article.description|truncatewords:14 }}</p>
+                                        <a class="feature-post-btn" href="{{ article.get_absolute_url }}">Read More...</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Hero Area End -->
+
+    <!-- Main Area Start -->
+    <main>
+        <section class="blog-list-sidebar-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="blog-list-wrapper">
+                            <div class="row">
+                                {% for article in latest_article %}
+                                    <div class="col-xl-6 col-md-6">
+                                        <div class="single-blog-list">
+                                            <a href="{{ article.get_absolute_url }}">
+                                                {% if article.image %}
+                                                    <img src="{{ article.image.url }}" alt="{{ article.title|truncatewords:4 }}">
+                                                {% else %}
+                                                    <img src="{% static 'images/image_not_available.jpg' %}" alt="{{ article.title|truncatewords:4 }}">
+                                                {% endif %}
+                                            </a>
+                                            <div class="blog-list-meta">
+                                                <div class="blog-author">
+                                                    <img src="{% static 'images/author.png' %}" alt="{{ article.author.username }}">
+                                                    <span>{{ article.author.username }}</span>
+                                                </div>
+                                                {% for category in article.category.all %}
+                                                    <a class="blog-category" href="{% url 'blog:category_article' category.slug %}">{{ category.title }}</a>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="blog-text">
+                                                <h3>{{ article.title|truncatewords:4 }}</h3>
+                                                <p>{{ article.description|truncatewords:14 }}</p>
+                                                <a class="blog-list-btn" href="{{ article.get_absolute_url }}">Read More...</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sidebar -->
+                    {% include 'includes/sidebar.html' %}
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="blog-recomended">
+                            <h2>Recomeneded Post</h2>
+                            <div class="row">
+                                {% for article in recommended_articles %}
+                                    <div class="col-xl-4 col-md-6">
+                                        <div class="single-recomended-post single-blog-list">
+                                            <a href="{{ article.get_absolute_url }}">
+                                                {% if article.image %}
+                                                    <img src="{{ article.image.url }}" alt="{{ article.title|truncatewords:4 }}">
+                                                {% else %}
+                                                    <img src="{% static 'images/image_not_available.jpg' %}" alt="{{ article.title|truncatewords:4 }}">
+                                                {% endif %}
+                                            </a>
+                                            <div class="blog-list-meta">
+                                                <div class="blog-author">
+                                                    <img src="{% static 'images/author.png' %}" alt="{{ article.author.username }}">
+                                                    <span>{{ article.author.username }}</span>
+                                                </div>
+                                                {% for category in article.category.all %}
+                                                    <a class="blog-category" href="{% url 'blog:category_article' category.slug %}">{{ category.title }}</a>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="blog-text">
+                                                <h3>{{ article.title|truncatewords:4 }}</h3>
+                                                <p>{{ article.description|truncatewords:14 }}</p>
+                                                <a class="blog-list-btn" href="{{ article.get_absolute_url }}">Read More...</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Main Area End -->
+{% endblock %}

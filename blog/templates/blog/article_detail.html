@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ articles.title }}{% endblock %}
+
+{% block content %}
+    <!-- Main Area Start -->
+    <main>
+        <section class="blog-list-sidebar-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="blog-details">
+                            {% if articles.image %}
+                                <img src="{{ articles.image.url }}" alt="{{ articles.title|truncatewords:4 }}">
+                            {% else %}
+                                <img src="{% static 'images/image_not_available.jpg' %}"
+                                     alt="{{ articles.title|truncatewords:4 }}">
+                            {% endif %}
+                            <div class="blog-list-meta">
+                                <div class="blog-author">
+                                    <img src="{% static 'images/author.png' %}" alt="{{ articles.author.username }}">
+                                    <span>{{ articles.author.username }}</span>
+                                </div>
+                                {% for category in articles.category.all %}
+                                    <a class="blog-category" href="{% url 'blog:category_article' category.slug %}">{{ category.title }}</a>
+                                {% endfor %}
+                            </div>
+                            <div class="blog-text">
+                                <span>{{ articles.created_at|date }}</span>
+                                <span>•</span>
+                                <span>visit: {{ articles.views }}</span>
+                                <h2>{{ articles.title }}</h2>
+                                <p style="text-align: justify">{{ articles.description }}</p>
+                            </div>
+                        </div>
+                        <div class="blog-details-contact-form">
+                            <div class="blog-details-comments">
+                                {% if articles.comments.count %}
+                                    <h2>{{ articles.comments.count }} Comments</h2>
+                                {% else %}
+                                    <h2>Add your comment</h2>
+                                {% endif %}
+                                <!-- Parent comment -->
+                                {% for comment in articles.comments.all %}
+                                {% if comment.parent is None %}
+                                    {% if comment.active %}
+                                        <div class="comment">
+                                            <div class="comment-author">
+                                                <img src="{% static 'images/user.png' %}" alt="Author">
+                                                <span class="author-name">{{ comment.user.username }}</span>
+                                            </div>
+                                            <div class="comment-text">
+                                                <p>{{ comment.body }}</p>
+                                                <button class="reply-btn" onclick="set_value({{ comment.id }})">Reply</button>
+                                                {% if request.user.is_authenticated and comment.user == request.user %}
+                                                    <a href="{% url 'blog:delete_comment' comment.id %}" class="delete-btn">Delete</a>
+                                                {% endif %}
+                                            </div>
+                                            <!-- Child comments -->
+                                            {% for reply in comment.replies.all %}
+                                                {% if reply.active %}
+                                                    <div class="reply">
+                                                        <div class="comment-author">
+                                                            <img src="{% static 'images/user.png' %}" alt="Author">
+                                                            <span class="author-name">{{ reply.user.username }}</span>
+                                                        </div>
+                                                        <div class="comment-text reply-text">
+                                                            <p>{{ reply.body }}</p>
+                                                            {% if request.user.is_authenticated and reply.user == request.user %}
+                                                                <a href="{% url 'blog:delete_comment' reply.id %}" class="delete-btn">Delete</a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% if request.user.is_authenticated %}
+                                <form method="post">
+                                {% csrf_token %}
+                                <p>
+                                    <input type="hidden" id="parent_id" name="parent_id" value="">
+                                </p>
+                                <p>
+                                    <label for="comment">Comment*</label>
+                                    <textarea id="body" name="body" placeholder="Your Comment"></textarea>
+                                </p>
+                                <p>
+                                    <button type="submit">Comment<i class="bi bi-send"></i>
+                                    </button>
+                                </p>
+                            </form>
+                            {% else %}
+                                <a class="btn btn-danger" href="{% url 'accounts:login' %}">You must be logged in to post a comment</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- Sidebar -->
+                    {% include 'includes/sidebar.html' %}
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="blog-recomended">
+                            <h2>Recomeneded Post</h2>
+                            <div class="row">
+                                {% for article in recommended_articles %}
+                                    <div class="col-xl-4 col-md-6">
+                                        <div class="single-recomended-post single-blog-list">
+                                            <a href="{{ article.get_absolute_url }}">
+                                                {% if article.image %}
+                                                    <img src="{{ article.image.url }}" alt="{{ article.title|truncatewords:4 }}">
+                                                {% else %}
+                                                    <img src="{% static 'images/image_not_available.jpg' %}" alt="{{ article.title|truncatewords:4 }}">
+                                                {% endif %}
+                                            </a>
+                                            <div class="blog-list-meta">
+                                                <div class="blog-author">
+                                                    <img src="{% static 'images/author.png' %}" alt="{{ article.author.username }}">
+                                                    <span>{{ article.author.username }}</span>
+                                                </div>
+                                                {% for category in articles.category.all %}
+                                                    <a class="blog-category" href="{% url 'blog:category_article' category.slug %}">{{ category.title }}</a>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="blog-text">
+                                                <h3>{{ article.title|truncatewords:4 }}</h3>
+                                                <p>{{ article.description|truncatewords:14 }}</p>
+                                                <a class="blog-list-btn" href="{{ article.get_absolute_url }}">Read More...</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Main Area End -->
+
+    <script>
+        function set_value(id){
+            document.getElementById('parent_id').value = id;
+            window.location.href = '#body'
+        }
+    </script>
+{% endblock %}

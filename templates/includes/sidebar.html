@@ -1,0 +1,42 @@
+{% load static %}
+<div class="col-xl-4">
+    <div class="row blog-sidebar">
+        <div class="col-xl-12 col-md-6">
+            <div class="sidebar-widget blog-search">
+                <form method="get" action="{% url 'blog:search_article' %}">
+                    <input type="search" name="search" placeholder="Search Blog Post">
+                    <button type="submit"><i class="bi bi-search"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="col-xl-12 col-md-6">
+            <div class="sidebar-widget recent-post">
+                <h3>Recent Post</h3>
+                {% for article in latest_articles %}
+                    {% if article.id != current_article.id %}
+                        <div class="single-recent-post">
+                            <a href="{{ article.get_absolute_url }}">
+                                {% if article.image %}
+                                    <img src="{{ article.image.url }}" alt="{{ article.title|truncatewords:4 }}">
+                                {% else %}
+                                    <img src="{% static 'images/image_not_available.jpg' %}" alt="{{ article.title|truncatewords:4 }}">
+                                {% endif %}
+                                <span>{{ article.title|truncatewords:4 }}</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-xl-12 col-md-6">
+            <div class="sidebar-widget blog-category-list">
+                <h3>Categories</h3>
+                <ul>
+                    {% for category in categories %}
+                        <li><a href="{% url 'blog:category_article' category.slug %}">{{ category.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
